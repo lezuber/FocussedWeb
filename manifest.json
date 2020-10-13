@@ -1,0 +1,24 @@
+{
+  "name": "Black- & Whitelist Mode",
+  "description": "Block or Whitelist websites.",
+  "version": "1.0",
+  "permissions": [
+    "storage", "webRequest", "webRequestBlocking",
+    "tabs",
+    "*://*/*"
+  ],
+  "background": {
+    "persistent": true,
+    "scripts": ["background.js"]
+  },
+  "browser_action": {
+    "default_title": "Focus",
+    "default_popup": "Popup.html",
+    "default_icon": "48.png"
+  },
+  "icons": { "16": "16.png",
+           "48": "48.png",
+          "128": "128.png" },
+  "manifest_version": 2,
+  "content_security_policy": "script-src 'self' https://ajax.googleapis.com; object-src 'self'"
+}
