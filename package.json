@@ -1,0 +1,23 @@
+{
+  "name": "focussed-web",
+  "version": "0.0.2",
+  "description": "A new way to focus on whatever you work on.",
+  "repository": "git@github.com:lezuber/UrlWhitelister.git",
+  "author": "Lenz Zuber",
+  "license": "MIT",
+  "scripts": {
+    "build": "yarn copy:static && webpack --config webpack.config.js",
+    "start": "yarn copy:static && webpack -w --config webpack.config.js",
+    "copy:static": "copyfiles manifest.json assets/**/* dist && copyfiles -f src/**/*.html dist"
+  },
+  "dependencies": {},
+  "devDependencies": {
+    "@types/chrome": "^0.0.124",
+    "@types/jquery": "^3.5.3",
+    "copyfiles": "^2.4.0",
+    "ts-loader": "^8.0.5",
+    "typescript": "^4.0.3",
+    "webpack": "^5.1.1",
+    "webpack-cli": "^4.0.0"
+  }
+}

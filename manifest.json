@@ -1,24 +1,31 @@
 {
-  "name": "Black- & Whitelist Mode",
-  "description": "Block or Whitelist websites.",
-  "version": "1.0",
+  "manifest_version": 2,
+  "name": "FocussedWeb",
+  "version": "1.0.0",
+  "description": "",
+  "icons": {
+    "16": "assets/icons/16.png",
+    "48": "assets/icons/48.png",
+    "128": "assets/icons/128.png"
+  },
+  "browser_action": {
+    "default_icon": "assets/icons/16.png",
+    "default_popup": "popup.html",
+    "default_title": "Starter Popup"
+  },
+  "background": {
+    "scripts": [
+      "js/background.js"
+    ],
+    "persistent": true
+  },
+  "web_accessible_resources": [
+    "assets/icons/*.png"
+  ],
   "permissions": [
     "storage", "webRequest", "webRequestBlocking",
     "tabs",
     "*://*/*"
   ],
-  "background": {
-    "persistent": true,
-    "scripts": ["background.js"]
-  },
-  "browser_action": {
-    "default_title": "Focus",
-    "default_popup": "Popup.html",
-    "default_icon": "48.png"
-  },
-  "icons": { "16": "16.png",
-           "48": "48.png",
-          "128": "128.png" },
-  "manifest_version": 2,
   "content_security_policy": "script-src 'self' https://ajax.googleapis.com; object-src 'self'"
 }

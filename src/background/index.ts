@@ -1,21 +1,15 @@
 // INIT
 // ___________________________________________________________________________________
-let isSiteAllowed = true;
-var myBlockedURLs, isEnabled, isWhitelistMode;
+let myBlockedURLs: string[], isEnabled: Boolean, isWhitelistMode: Boolean, isSiteAllowed:Boolean;
 
 myBlockedURLs = [];
 isEnabled = false;
 isWhitelistMode = false;
+isSiteAllowed = true;
 
-window.browser = (function () {
-  return window.msBrowser ||
-    window.browser ||
-    window.chrome;
-})();
-
-var initializeExtension = function () {
+var initializeExtension = function() {
   console.log("Starting Up!");
-  window.browser.storage.sync.get("urlStore", function (results) {
+  chrome.storage.sync.get("urlStore", function(results) {
     if (results.urlStore === undefined) {
       console.log("urlStore is undefined, using defaults");
       var defaultURLs = [
@@ -25,10 +19,10 @@ var initializeExtension = function () {
       ];
 
       var newStorage = { urlStore: defaultURLs };
-      newStorage.isEnabled = false;
-      newStorage.isWhitelist = false;
+      newStorage["isEnabled"] = false;
+      newStorage["isWhitelist"] = false;
 
-      window.browser.storage.sync.set(newStorage, function () {});
+      chrome.storage.sync.set(newStorage, function() {});
     } else {
       console.log("urlStore is defined");
       updateBlockedList();
@@ -39,17 +33,17 @@ var initializeExtension = function () {
 // Methods
 // ___________________________________________________________________________________
 
-var updateBlockedList = function () {
+var updateBlockedList = function() {
   console.log("Refresh for Blocked List!");
   myBlockedURLs = [];
-  window.browser.storage.sync.get("urlStore", function (results) {
-    results.urlStore.forEach((url) =>
+  chrome.storage.sync.get("urlStore", function(results) {
+    results.urlStore.forEach((url: string) =>
       myBlockedURLs.push(url.replace(/https?:\/\/(?:www\.)?/g, ""))
     );
   });
 };
 
-var checkIfUrlAllowed = function (reqUrl) {
+var checkIfUrlAllowed = function(reqUrl: string) {
   let isSiteAllowed = true;
 
   let urlsToCheck = [...myBlockedURLs];
@@ -72,21 +66,21 @@ var checkIfUrlAllowed = function (reqUrl) {
 // ___________________________________________________________________________________
 // MAIN
 
-window.browser.extension.onRequest.addListener(function (request, _, _) {
-  if (request.msg == "updateBlockedList") updateBlockedList();
+chrome.runtime.onMessage.addListener(function(request: any, _1:any, _2: any) {
+  if (request && request.msg == "updateBlockedList") updateBlockedList();
 });
 
-window.browser.tabs.onUpdated.addListener(function (tabId, changeInfo, tab) {
+chrome.tabs.onUpdated.addListener(function(tabId, changeInfo, tab) {
   if (isEnabled && changeInfo.status === "loading") {
     if (tab.url && !checkIfUrlAllowed(tab.url)) {
       console.log("Redirect!");
-      window.browser.tabs.update(tab.id, { url: "SiteBlocked.html" });
+      chrome.tabs.update(tab.id, { url: "SiteBlocked.html" });
     }
     return;
   }
 });
 
-window.browser.runtime.onMessage.addListener(function (request, _, _) {
+chrome.runtime.onMessage.addListener(function(request, _1: any, _2:any) {
   if (request["isActive"]) {
     console.log("Focus - Toggled On");
     isEnabled = true;

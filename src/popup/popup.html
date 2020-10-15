@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Focus</title>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>
+    <script src="/js/popup.js"></script>
+    <link
+      href="https://unpkg.com/tailwindcss/dist/tailwind.min.css"
+      rel="stylesheet"
+    />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Lato:wght@400;700&display=swap"
+      rel="stylesheet"
+    />
+    <style>
+      body {
+        background-color: #d53369;
+        background-image: linear-gradient(315deg, #d53369 0%, #daae51 100%);
+        font-family: "Lato", sans-serif;
+      }
+      .toggle__dot {
+        top: -0.25rem;
+        left: -0.25rem;
+        transition: all 0.2s ease-in-out;
+      }
+
+      input:checked ~ .toggle__dot {
+        transform: translateX(100%);
+        background-color: #48bb78;
+      }
+
+      #listOfURLs ul {
+        list-style: none;
+        padding: 0px;
+        font-size: 14px;
+        line-height: 2em;
+      }
+
+      #listOfURLs li {
+        display: flex;
+        justify-content: space-between;
+        margin-top: 10px;
+        border-bottom: solid 1px #eee;
+      }
+      #listOfURLs li a {
+        cursor: pointer;
+        font-size: 1.2rem;
+      }
+    </style>
+  </head>
+  <body class="flex flex-col p-4 text-white w-60">
+    <div id="header" class="flex flex-row font-bold text-2xl justify-between">
+      <div id="focus" class="">Focus</div>
+      <div id="close" class="cursor-pointer">X</div>
+    </div>
+
+    <div class="flex items-center">
+      <label
+        for="isActive"
+        class="w-full flex items-center justify-between cursor-pointer"
+      >
+        <div class="w-1/2 font-bold text-xl">Status</div>
+        <div class="relative">
+          <input id="isActive" type="checkbox" class="hidden" />
+          <div class="w-10 h-4 bg-gray-400 rounded-full shadow-inner"></div>
+          <div
+            class="toggle__dot absolute w-6 h-6 bg-white rounded-full shadow inset-y-0 left-0"
+          ></div>
+        </div>
+      </label>
+    </div>
+    <div class="flex items-center">
+      <label
+        for="isWhitelist"
+        class="w-full flex items-center justify-between cursor-pointer"
+      >
+        <div class="w-1/2 font-bold text-base leading-tight">
+          Whitelist Mode
+        </div>
+        <div class="relative">
+          <input id="isWhitelist" type="checkbox" class="hidden" />
+          <div class="w-10 h-4 bg-gray-400 rounded-full shadow-inner"></div>
+          <div
+            class="toggle__dot absolute w-6 h-6 bg-white rounded-full shadow inset-y-0 left-0"
+          ></div>
+        </div>
+      </label>
+    </div>
+
+    <div id="urls" class="mt-4">
+      <input
+        type="text"
+        name="txtURL"
+        id="txtURL"
+        placeholder="Enter URL or keyword"
+        class="p-2 text-sm text-black shadow appearance-none border rounded"
+      />
+      <div id="listOfURLs"></div>
+    </div>
+  </body>
+</html>

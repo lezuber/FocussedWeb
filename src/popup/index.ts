@@ -1,26 +1,28 @@
+// import Vue from 'vue';
+// import App from './App.vue';
+
+// new Vue({
+//   el: '#app',
+//   render: h => h(App)
+// });
+
 var toggles = {
   isActive: false,
   isWhitelist: false,
 };
 var returnedArray;
 
-window.browser = (function () {
-  return window.msBrowser ||
-    window.browser ||
-    window.chrome;
-})()
-
 // Pull Values from Chrome Storage and Refreshes UI
 function refreshNodes() {
   $("#listOfURLs").empty();
-  window.browser.storage.sync.get("urlStore", function (results) {
+  chrome.storage.sync.get("urlStore", function (results) {
     console.log("Pulling values using sync.get --> ");
     console.log(results);
     //Creates List
     createList(results.urlStore);
   });
 
-  window.browser.storage.sync.get(Object.keys(toggles), function (results) {
+  chrome.storage.sync.get(Object.keys(toggles), function (results) {
     Object.keys(toggles).forEach(function (k) {
       toggles[k] = results[k] === undefined ? false : results[k];
 
@@ -33,16 +35,16 @@ function refreshNodes() {
 
 // Add URL
 function addURL() {
-  newUrl = document.querySelector("#txtURL").value;
+  let newUrl: string | undefined = ((document.querySelector("#txtURL"))as HTMLInputElement | undefined)?.value;
 
   if (newUrl) {
-    window.browser.storage.sync.get("urlStore", function (results) {
+    chrome.storage.sync.get("urlStore", function (results) {
       var newStore =
         results.urlStore === undefined
           ? [newUrl]
           : [...results.urlStore, newUrl];
 
-      window.browser.storage.sync.set({ urlStore: newStore }, function () {
+      chrome.storage.sync.set({ urlStore: newStore }, function () {
         console.log("Url added.");
       });
 
@@ -50,10 +52,10 @@ function addURL() {
       refreshNodes();
 
       // Update what extension blocks
-      window.browser.extension.sendRequest({ msg: "updateBlockedList" });
+      chrome.extension.sendRequest({ msg: "updateBlockedList" });
 
       // Clear value from text box
-      document.querySelector("#txtURL").value = "";
+      ((document.querySelector("#txtURL"))as HTMLInputElement).value = "";
     });
   }
 }
@@ -63,13 +65,13 @@ function deleteURL(index, url) {
   if (url) {
     console.log("Delete this one -->" + url);
 
-    window.browser.storage.sync.get("urlStore", function (results) {
+    chrome.storage.sync.get("urlStore", function (results) {
       returnedArray = results.urlStore;
       if (index > -1) {
         returnedArray.splice(index, 1);
       }
 
-      window.browser.storage.sync.set({ urlStore: returnedArray }, function () {
+      chrome.storage.sync.set({ urlStore: returnedArray }, function () {
         console.log("Value sync'd back");
       });
 
@@ -77,7 +79,7 @@ function deleteURL(index, url) {
       refreshNodes();
 
       // Update what extension blocks
-      window.browser.extension.sendRequest({ msg: "updateBlockedList" });
+      chrome.extension.sendRequest({ msg: "updateBlockedList" });
     });
   }
 }
@@ -85,17 +87,17 @@ function deleteURL(index, url) {
 function changeToggleStatus(toggle, newStatus) {
   var msg = {};
   msg[toggle] = newStatus;
-  window.browser.runtime.sendMessage(msg);
+  chrome.runtime.sendMessage(msg);
 
-  window.browser.storage.sync.set(msg, function () {
+  chrome.storage.sync.set(msg, function () {
     console.log(toggle + " is now set to ---> " + newStatus);
   });
 
   if (toggle == "isActive") {
     if (newStatus) {
-      window.browser.browserAction.setIcon({ path: "48-clicked.png" });
+      chrome.browserAction.setIcon({ path: "assets/icons/48-clicked.png" });
     } else {
-      window.browser.browserAction.setIcon({ path: "48.png" });
+      chrome.browserAction.setIcon({ path: "assets/icons/48.png" });
     }
   }
 }
